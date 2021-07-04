@@ -41,9 +41,9 @@ public class JavaBaseApp {
     }
     public static void createTable() throws SQLException {
         String sql = "create table if not exists users (\n" +
-                "id integer primary key autoincrement not null,\n" +
-                "name text not null,\n" +
-                "score integer not null\n" +
+                "login integer primary key autoincrement not null,\n" +
+                "password text not null,\n" +
+                "nickname integer not null\n" +
                 ");";
         statement.executeUpdate(sql);
     }

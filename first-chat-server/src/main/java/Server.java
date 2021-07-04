@@ -14,12 +14,12 @@ public class Server {
 
     public Server() {
         try {
-            this.authProvider = new InMemoryAuthProvider();
+            this.authProvider = new JavaBaseAuthProvider();
             this.clientHandlerList = new ArrayList<>(); // создаем список
             ServerSocket serverSocket = new ServerSocket(8189); // указываем порт подключения
             System.out.println("Сервер запущен. Ожидаем подключения клиентов.");
-
             while (true) { // ждем подключения новых клиентов
+                authProvider.connect();
                 Socket socket = serverSocket.accept();
                 System.out.println("Клиент подключился");
                 new ClientHandler(this, socket); // добавляем клиента в список подключенных клиентов
@@ -27,6 +27,8 @@ public class Server {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            authProvider.disConnect();
         }
     }
 

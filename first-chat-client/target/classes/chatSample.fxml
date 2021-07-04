@@ -6,8 +6,9 @@
 <VBox alignment="center" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="first.chat.client.Controller">
     <HBox fx:id="authPanel">
-        <TextField promptText="Введите имя пользователя" fx:id="usernameWindow" HBox.hgrow="ALWAYS"
-                   onAction="#tryToAuth"/>
+        <TextField promptText="Введите имя пользователя" fx:id="usernameWindow" HBox.hgrow="ALWAYS"/>
+        <PasswordField promptText="Введите имя пользователя" fx:id="passwordWindow" HBox.hgrow="ALWAYS"
+        onAction="#tryToAuth"/>
         <Button onAction="#tryToAuth">Подключиться</Button>
     </HBox>
 

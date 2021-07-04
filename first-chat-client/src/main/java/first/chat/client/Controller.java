@@ -109,6 +109,7 @@ public class Controller {
                 String inputMessage = in.readUTF();
                 if (inputMessage.startsWith("/")) { // проверка на служебные сообщения
                     if (inputMessage.equals("/exit")) { // проверка на отключение от сервера
+                        chatName.clear();
                         break;
                     }
                     if (inputMessage.startsWith("/clients_list ")) { // список подключенных имен
