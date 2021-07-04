@@ -25,6 +25,8 @@ public class Controller {
     HBox authPanel, messagePanel, namePanel;
     @FXML
     ListView<String> clientsListView;
+    @FXML
+    PasswordField passwordWindow;
 
 
     public void sendToMessage() { // Отправка сообщений на сервер
@@ -53,8 +55,9 @@ public class Controller {
         connect();
         try {
             chatName.appendText("Вы авторизованы как: " + usernameWindow.getText());
-            out.writeUTF("/auth " + usernameWindow.getText());
+            out.writeUTF("/auth " + usernameWindow.getText() + " " + passwordWindow.getText());
             usernameWindow.clear();
+            passwordWindow.clear();
 
         } catch (IOException e) {
             showError("Невозможно отправить запрос авторизации на сервер");

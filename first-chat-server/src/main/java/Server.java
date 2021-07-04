@@ -6,9 +6,15 @@ import java.util.List;
 
 public class Server {
     private List<ClientHandler> clientHandlerList; // список подключенных клиентов
+    private AuthProvider authProvider;
+
+    public AuthProvider getAuthProvider() {
+        return authProvider;
+    }
 
     public Server() {
         try {
+            this.authProvider = new InMemoryAuthProvider();
             this.clientHandlerList = new ArrayList<>(); // создаем список
             ServerSocket serverSocket = new ServerSocket(8189); // указываем порт подключения
             System.out.println("Сервер запущен. Ожидаем подключения клиентов.");
@@ -60,7 +66,7 @@ public class Server {
 
     }
 
-    public boolean chekName(String userName) { // Проверяем есть ли другие пользователи с таким именем.  Думал ещё сделать через HasMap, но что-то запутался, хотя до сих пор кажется что через мапу будет лучше
+    public boolean chekName(String userName) { // Проверяем есть ли другие пользователи с таким именем.
         for (int i = 0; i < clientHandlerList.size(); i++) {
             if (clientHandlerList.get(i).getUserName().equalsIgnoreCase(userName)) {
                 return false;

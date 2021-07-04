@@ -44,15 +44,17 @@ public class ClientHandler {
         {
             if (message.startsWith("/auth ")) {
                 String[] tokens = message.split("\\s+");
-                if (tokens.length > 2) {
-                    sendMessage("Server: Имя пользователя не может состоять из несколькиз слов");
+                if (tokens.length != 3) {
+                    sendMessage("Server: не указано имя пользователия или пароль");
                     return false;
                 }
-                if (tokens.length == 1) {
-                    sendMessage("Server: Вы не указали имя пользователя");
+                String password = tokens[2];
+                String login = tokens[1];
+                userName = server.getAuthProvider().getUsernameBuLoginAndPassword(login, password);
+                if(userName == null){
+                    sendMessage("Server: неверно указан логин или пароль");
                     return false;
                 }
-                userName = tokens[1];
                 if (server.chekName(userName)) {
                     sendMessage("/authok " + userName);
                     sendMessage("Вы вошли в чат под именем: " + userName);
