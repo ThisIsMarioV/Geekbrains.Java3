@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,14 +13,14 @@ public class Server {
         return authProvider;
     }
 
-    public Server() {
+    public Server() throws SQLException {
         try {
             this.authProvider = new JavaBaseAuthProvider();
             this.clientHandlerList = new ArrayList<>(); // создаем список
+            authProvider.connect();
             ServerSocket serverSocket = new ServerSocket(8189); // указываем порт подключения
             System.out.println("Сервер запущен. Ожидаем подключения клиентов.");
             while (true) { // ждем подключения новых клиентов
-                authProvider.connect();
                 Socket socket = serverSocket.accept();
                 System.out.println("Клиент подключился");
                 new ClientHandler(this, socket); // добавляем клиента в список подключенных клиентов
@@ -27,7 +28,7 @@ public class Server {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             authProvider.disConnect();
         }
     }

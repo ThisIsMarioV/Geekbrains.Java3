@@ -2,6 +2,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.SQLException;
 
 public class ClientHandler {
     private Server server;
@@ -31,7 +32,7 @@ public class ClientHandler {
         try {
             while (!consumeAuthorizeMessage(in.readUTF())) ;
             while (regularConsumeMessage(in.readUTF())) ;
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         } finally { // удаление из списка подключенных клиентов
             System.out.println("Клиент " + userName + " отключился");
@@ -40,7 +41,7 @@ public class ClientHandler {
         }
 
     }
-    private boolean consumeAuthorizeMessage(String message) {
+    private boolean consumeAuthorizeMessage(String message) throws SQLException {
         {
             if (message.startsWith("/auth ")) {
                 String[] tokens = message.split("\\s+");
