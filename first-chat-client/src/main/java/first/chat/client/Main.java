@@ -15,7 +15,6 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root =fxmlLoader.load(getClass().getResource("/chatSample.fxml").openStream());
         Controller controller = (Controller) fxmlLoader.getController();
-//        Parent root = FXMLLoader.load(getClass().getResource("/chatSample.fxml"));
         primaryStage.setTitle("Chat Window");
         primaryStage.setOnCloseRequest(event -> controller.sendCloseRequest());
         primaryStage.setScene(new Scene(root, 600, 400));
