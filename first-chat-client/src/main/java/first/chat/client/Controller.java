@@ -4,16 +4,20 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+
+import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class Controller {
     private Socket socket;
     private DataOutputStream out;
     private DataInputStream in;
+    private FileOutputStream outputStream;
+    private FileInputStream inputStream;
+    private ExecutorService singleClientThread = Executors.newSingleThreadExecutor();
 
     @FXML
     TextArea chatWindow;
@@ -55,6 +59,8 @@ public class Controller {
         connect();
         try {
             chatName.appendText("Вы авторизованы как: " + usernameWindow.getText());
+            outputStream = new FileOutputStream("history_"+usernameWindow.getText()+".txt", true);
+            inputStream = new FileInputStream("history_"+usernameWindow.getText()+".txt");
             out.writeUTF("/auth " + usernameWindow.getText() + " " + passwordWindow.getText());
             usernameWindow.clear();
             passwordWindow.clear();
@@ -65,18 +71,22 @@ public class Controller {
     }
 
     public void connect() { // подключение к серверу
-        if (socket != null && !socket.isClosed()) { // построчно проверял весь код, никак не мог понять, почему не работает переавторизация не серврере. и в этой строчке при проверке socket.isClosed не поставил !. Но зато при поиске этой ошибки, я максимально разорался со всем кодом)
+        if (socket != null && !socket.isClosed()) {
             return;
         }
         try {
             socket = new Socket("localhost", 8189);
             out = new DataOutputStream(socket.getOutputStream());
             in = new DataInputStream(socket.getInputStream());
-            new Thread(this::logic).start();
+            singleClientThread.execute(() -> {
+                logic();
+            });
 
         } catch (IOException e) {
             showError("Не удалось подключиться к серверу");
 
+        } finally {
+            singleClientThread.shutdown();
         }
     }
 
@@ -107,6 +117,15 @@ public class Controller {
             }
             while (true) {
                 String inputMessage = in.readUTF();
+//                if(!inputMessage.startsWith("/")){
+//                    for (int i = 0; i < 100; i++) {
+//                        chatWindow.appendText(String.valueOf(inputStream.read()));
+//                    }
+//                } загрузку истории не успел доделать
+                if(!inputMessage.startsWith("/")){
+                    outputStream.write(inputMessage.getBytes());
+                    outputStream.write("\n".getBytes());
+                }
                 if (inputMessage.startsWith("/")) { // проверка на служебные сообщения
                     if (inputMessage.equals("/exit")) { // проверка на отключение от сервера
                         chatName.clear();
