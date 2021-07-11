@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
 
-public class ClientHandler {
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class ClientHandler{
     private Server server;
     private Socket socket;
     private String userName = null;
     private DataInputStream in;
     private DataOutputStream out;
+    private ExecutorService singleServerThread = Executors.newSingleThreadExecutor();
 
     public String getUserName() {
         return userName;
@@ -21,9 +25,14 @@ public class ClientHandler {
             this.socket = socket;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
-            new Thread(() -> logic()).start();// поток общения с клиентом
+            singleServerThread.execute(() -> { // поток общения с клиентом
+                logic();
+            });
+
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            singleServerThread.shutdown();
         }
 
     }
@@ -41,6 +50,7 @@ public class ClientHandler {
         }
 
     }
+
     private boolean consumeAuthorizeMessage(String message) throws SQLException {
         {
             if (message.startsWith("/auth ")) {
@@ -121,4 +131,6 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
+
+
 }

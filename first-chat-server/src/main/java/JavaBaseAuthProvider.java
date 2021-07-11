@@ -34,13 +34,13 @@ public class JavaBaseAuthProvider implements AuthProvider {
 
     @Override
     public String getUsernameBuLoginAndPassword(String login, String password) throws SQLException {
-        createTable();
+
         insertPs();
         return readTable(login, password);
     }
 
     @Override
-    public void connect() {
+    public void connect() throws SQLException {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:javadb.db");
         } catch (SQLException throwables) {
@@ -51,10 +51,12 @@ public class JavaBaseAuthProvider implements AuthProvider {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        createTable();
     }
 
     @Override
-    public void disConnect() {
+    public void disConnect() throws SQLException {
+        dropTable();
         if (statement != null) {
             try {
                 statement.close();
@@ -65,7 +67,6 @@ public class JavaBaseAuthProvider implements AuthProvider {
         if (connection != null) {
             try {
                 connection.close();
-                dropTable();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }

@@ -7,7 +7,8 @@ import javafx.scene.layout.HBox;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class Controller {
@@ -16,6 +17,7 @@ public class Controller {
     private DataInputStream in;
     private FileOutputStream outputStream;
     private FileInputStream inputStream;
+    private ExecutorService singleClientThread = Executors.newSingleThreadExecutor();
 
     @FXML
     TextArea chatWindow;
@@ -76,11 +78,15 @@ public class Controller {
             socket = new Socket("localhost", 8189);
             out = new DataOutputStream(socket.getOutputStream());
             in = new DataInputStream(socket.getInputStream());
-            new Thread(this::logic).start();
+            singleClientThread.execute(() -> {
+                logic();
+            });
 
         } catch (IOException e) {
             showError("Не удалось подключиться к серверу");
 
+        } finally {
+            singleClientThread.shutdown();
         }
     }
 

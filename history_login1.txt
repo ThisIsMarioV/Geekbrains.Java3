@@ -10,3 +10,24 @@ nickname1: sdx
 nickname1: sgt
 nickname1: sd
 Вы вошли в чат под именем: nickname1
+Вы вошли в чат под именем: nickname1
+nickname1: asdfaf
+nickname1: asd
+nickname1: asf
+nickname1: sdf
+nickname1: awrs
+Вы вошли в чат под именем: nickname1
+nickname9 подключился к чату
+nickname1: asd
+nickname9: asf
+nickname1: asfd
+nickname9: asf
+nickname9 отключился от чата
+Вы вошли в чат под именем: nickname1
+nickname9 подключился к чату
+nickname9: df
+nickname9: df
+nickname9: asf
+nickname1: asf
+nickname1: asf
+nickname1: fsdg
